@@ -162,7 +162,15 @@ function createUI() {
             top: settings.position.y + 'px',
             transform: 'none',
         });
+        
+        // 延时校验边界（等待 DOM 渲染完成拿到真实宽高）
+        setTimeout(enforceBounds, 100);
     }
+
+    // 监听窗口大小变化
+    $(window).on('resize', () => {
+        if (settings.position.x !== null) enforceBounds();
+    });
 
     // 点击切换极简
     $bar.on('click', (e) => {
@@ -278,12 +286,46 @@ function initDrag() {
                 settings.position.x = rect.left;
                 settings.position.y = rect.top;
                 saveSettings();
+                enforceBounds();
             }
         };
 
         $(document).on('mousemove touchmove', onMove);
         $(document).on('mouseup touchend', onUp);
     });
+}
+
+// ===== 边界校验 =====
+function enforceBounds() {
+    if (!$wrapper) return;
+    const settings = getSettings();
+    if (settings.position.x === null) return;
+
+    const rect = $wrapper[0].getBoundingClientRect();
+    const ww = window.innerWidth;
+    const wh = window.innerHeight;
+
+    let newX = settings.position.x;
+    let newY = settings.position.y;
+    let changed = false;
+
+    // 检查右侧边界
+    if (newX + rect.width > ww) { newX = ww - rect.width - 10; changed = true; }
+    // 检查底部边界
+    if (newY + rect.height > wh) { newY = wh - rect.height - 10; changed = true; }
+    // 检查左侧/顶部边界
+    if (newX < 10) { newX = 10; changed = true; }
+    if (newY < 10) { newY = 10; changed = true; }
+
+    if (changed) {
+        settings.position.x = newX;
+        settings.position.y = newY;
+        $wrapper.css({
+            left: newX + 'px',
+            top: newY + 'px'
+        });
+        saveSettings();
+    }
 }
 
 // ===== 事件监听 =====
