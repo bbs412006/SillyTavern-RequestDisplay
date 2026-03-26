@@ -43,6 +43,7 @@ jQuery(async () => {
     await createUI();
     registerEventListeners();
     await setupSettingsUI();
+    toastr.info(`[Request Display] 插件已就绪`, null, { timeOut: 3000 });
     console.log(`[${extensionName}] 插件已加载`);
 });
 
@@ -87,13 +88,16 @@ async function setupSettingsUI() {
             $wrapper.css({
                 left: '50%',
                 top: 'auto',
-                bottom: '20px',
+                bottom: '120px',
                 transform: 'translateX(-50%)',
             });
+            $wrapper.show(); // 确保显示
             $bar.removeClass('req-bar--mini');
+            settings.enabled = true; // 强制启用
             settings.isMini = false;
+            $enabledElem.prop('checked', true);
             $miniElem.prop('checked', false);
-            toastr.success('悬浮条位置已重置为底部居中');
+            toastr.success('悬浮条位置已重置到屏幕下方中央');
         });
 
     } catch (e) {

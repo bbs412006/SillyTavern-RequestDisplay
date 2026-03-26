@@ -370,7 +370,7 @@
 /* ===== 移动端适配 ===== */
 @media (max-width: 768px) {
     .req-display-wrapper {
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(140px + env(safe-area-inset-bottom, 0px));
     }
 
     .req-bar:not(.req-bar--mini) {
