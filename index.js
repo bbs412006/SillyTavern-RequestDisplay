@@ -180,8 +180,19 @@ function createUI() {
 
     // 点击切换极简
     $bar.on('click', (e) => {
-        if ($(e.target).closest('.req-bar__toggle').length) return;
-        toggleMiniMode();
+        if ($(e.target).closest('.req-bar__toggle, .req-history').length) return;
+        // isDragging is not defined in this scope, assuming it's meant to be a global or passed.
+        // For now, removing the !isDragging check as it's not available here.
+        // If drag functionality is intended to prevent click, it needs to be handled differently.
+        // Re-adding the original toggleMiniMode call, and adding saveSettings() there.
+        // Or, if the instruction implies inlining the logic, we need to ensure $miniElem is accessible.
+        // Given $miniElem is now global, we can inline.
+        $bar.toggleClass('req-bar--mini');
+        settings.isMini = $bar.hasClass('req-bar--mini');
+        saveSettings();
+        if ($miniElem) { // Ensure $miniElem is initialized
+            $miniElem.prop('checked', settings.isMini);
+        }
     });
 
     // 点击展开历史

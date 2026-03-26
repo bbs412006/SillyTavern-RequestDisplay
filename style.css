@@ -30,10 +30,11 @@
     max-width: 600px;
     width: 480px;
     border-radius: 18px;
-    background: rgba(20, 20, 40, 0.92);
+    background: rgba(35, 35, 55, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1.5px solid rgba(100, 100, 140, 0.3);
+    border: 1.5px solid rgba(130, 130, 170, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     padding: 0 14px;
@@ -119,30 +120,30 @@
     display: flex;
     align-items: center;
     gap: 0;
-    color: #c8c8e0;
+    color: #f1f5f9;
     font-family: 'Cascadia Code', 'Consolas', 'Microsoft YaHei', monospace;
     font-size: 12.5px;
 }
 
 .req-bar__sep {
-    color: #4a4a6a;
+    color: #64748b;
     margin: 0 8px;
     flex-shrink: 0;
 }
 
 .req-bar__api {
-    color: #a78bfa;
+    color: #c4b5fd;
     font-weight: 600;
     flex-shrink: 0;
 }
 
 .req-bar__model {
-    color: #7dd3fc;
+    color: #bae6fd;
     flex-shrink: 0;
 }
 
 .req-bar__summary {
-    color: #9ca3af;
+    color: #cbd5e1;
     max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -150,12 +151,12 @@
 }
 
 .req-bar__tokens {
-    color: #fbbf24;
+    color: #fcd34d;
     flex-shrink: 0;
 }
 
 .req-bar__time {
-    color: #34d399;
+    color: #6ee7b7;
     flex-shrink: 0;
 }
 
@@ -181,10 +182,10 @@
 
 /* ===== 状态：空闲 ===== */
 .req-bar--idle {
-    border-color: rgba(80, 80, 110, 0.25);
-    box-shadow: none;
+    border-color: rgba(100, 100, 140, 0.4);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
-.req-bar--idle .req-bar__icon { color: #4a4a6a; }
+.req-bar--idle .req-bar__icon { color: #818cf8; }
 
 /* ===== 状态：请求中（呼吸流光） ===== */
 .req-bar--loading {
@@ -284,11 +285,11 @@
     width: 480px;
     min-width: 300px;
     max-width: 600px;
-    background: rgba(18, 18, 36, 0.95);
+    background: rgba(30, 30, 45, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1.5px solid rgba(100, 100, 140, 0.3);
-    border-top: 1px solid rgba(80, 80, 120, 0.15);
+    border: 1.5px solid rgba(130, 130, 170, 0.5);
+    border-top: 1px solid rgba(100, 100, 140, 0.25);
     border-radius: 0 0 14px 14px;
     margin-top: 0;
     padding: 4px 0 6px;
@@ -312,26 +313,26 @@
     align-items: center;
     padding: 5px 16px;
     gap: 0;
-    color: #9ca3af;
+    color: #cbd5e1;
     transition: background 0.15s;
 }
 .req-history__item:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .req-history__idx {
-    color: #4b5563;
+    color: #64748b;
     width: 28px;
     flex-shrink: 0;
     text-align: right;
     margin-right: 10px;
 }
 .req-history__api {
-    color: #a78bfa;
+    color: #c4b5fd;
     flex-shrink: 0;
 }
 .req-history__model {
-    color: #7dd3fc;
+    color: #bae6fd;
     flex-shrink: 0;
     margin-left: 8px;
 }
@@ -339,26 +340,26 @@
     flex: 1;
 }
 .req-history__tokens {
-    color: #fbbf24;
+    color: #fcd34d;
     flex-shrink: 0;
     margin-right: 12px;
     min-width: 70px;
     text-align: right;
 }
 .req-history__time {
-    color: #34d399;
+    color: #6ee7b7;
     flex-shrink: 0;
     min-width: 44px;
     text-align: right;
 }
 .req-history__time--stopped {
-    color: #fb923c;
+    color: #fdba74;
 }
 
 .req-history__empty {
     text-align: center;
     padding: 8px 16px;
-    color: #4b5563;
+    color: #94a3b8;
     font-style: italic;
 }
 
