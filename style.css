@@ -7,6 +7,7 @@
 .req-display-wrapper {
     position: fixed;
     bottom: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     left: 50%;
     transform: translateX(-50%);
     z-index: 999999;
@@ -370,6 +371,7 @@
 /* ===== 移动端适配 ===== */
 @media (max-width: 768px) {
     .req-display-wrapper {
+        bottom: 140px;
         bottom: calc(140px + env(safe-area-inset-bottom, 0px));
     }
 
