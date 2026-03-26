@@ -86,10 +86,12 @@ async function setupSettingsUI() {
             settings.position = { x: null, y: null };
             saveSettings();
             $wrapper.css({
-                left: '50%',
+                left: '0',
+                right: '0',
+                margin: '0 auto',
                 top: 'auto',
                 bottom: '120px',
-                transform: 'translateX(-50%)',
+                transform: 'none',
             });
             $wrapper.show(); // 确保显示
             $bar.removeClass('req-bar--mini');
