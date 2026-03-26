@@ -9,7 +9,8 @@ import { getContext } from '../../../extensions.js';
 import { getTokenCountAsync } from '../../../tokenizers.js';
 
 const extensionName = 'request-display';
-const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`;
+// 动态获取当前脚本所在目录路径
+const extensionFolderPath = new URL('.', import.meta.url).pathname.replace(/\/$/, '');
 
 // ===== 默认设置 =====
 const defaultSettings = {
