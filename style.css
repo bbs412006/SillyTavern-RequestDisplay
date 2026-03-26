@@ -1,0 +1,423 @@
+/* ===================================
+   SillyTavern Request Display
+   悬浮状态条样式
+   =================================== */
+
+/* ===== 悬浮条容器 ===== */
+.req-display-wrapper {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+}
+.req-display-wrapper * {
+    pointer-events: auto;
+}
+
+/* ===== 悬浮条基础 ===== */
+.req-bar {
+    position: relative;
+    height: 36px;
+    min-width: 300px;
+    max-width: 600px;
+    width: 480px;
+    border-radius: 18px;
+    background: rgba(20, 20, 40, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(100, 100, 140, 0.3);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 0;
+    overflow: hidden;
+    cursor: pointer;
+    transition:
+        width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        min-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.6s ease,
+        box-shadow 0.6s ease;
+    font-size: 13px;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* ===== 极简模式 ===== */
+.req-bar.req-bar--mini {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    border-radius: 50%;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+}
+.req-bar.req-bar--mini .req-bar__icon {
+    margin: 0;
+    margin-right: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 800;
+    -webkit-text-stroke: 0.8px currentColor;
+}
+.req-bar.req-bar--mini .req-bar__content,
+.req-bar.req-bar--mini .req-bar__toggle {
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+/* ===== 内容区 ===== */
+.req-bar__content {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex: 1;
+    min-width: 0;
+    transition: opacity 0.3s ease 0.1s;
+}
+.req-bar__content::-webkit-scrollbar { display: none; }
+
+.req-bar__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    -webkit-text-stroke: 0.5px currentColor;
+}
+
+.req-bar__text {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    color: #c8c8e0;
+    font-family: 'Cascadia Code', 'Consolas', 'Microsoft YaHei', monospace;
+    font-size: 12.5px;
+}
+
+.req-bar__sep {
+    color: #4a4a6a;
+    margin: 0 8px;
+    flex-shrink: 0;
+}
+
+.req-bar__api {
+    color: #a78bfa;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.req-bar__model {
+    color: #7dd3fc;
+    flex-shrink: 0;
+}
+
+.req-bar__summary {
+    color: #9ca3af;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+}
+
+.req-bar__tokens {
+    color: #fbbf24;
+    flex-shrink: 0;
+}
+
+.req-bar__time {
+    color: #34d399;
+    flex-shrink: 0;
+}
+
+/* ===== 展开/收起按钮 ===== */
+.req-bar__toggle {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    cursor: pointer;
+    color: #6b7280;
+    border-radius: 50%;
+    transition: color 0.2s, background 0.2s, opacity 0.3s ease;
+    font-size: 11px;
+}
+.req-bar__toggle:hover {
+    color: #e0e0e0;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== 状态：空闲 ===== */
+.req-bar--idle {
+    border-color: rgba(80, 80, 110, 0.25);
+    box-shadow: none;
+}
+.req-bar--idle .req-bar__icon { color: #4a4a6a; }
+
+/* ===== 状态：请求中（呼吸流光） ===== */
+.req-bar--loading {
+    border-color: transparent;
+    animation: req-breathe-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes req-breathe-glow {
+    0%, 100% {
+        border-color: rgba(139, 92, 246, 0.6);
+        box-shadow:
+            0 0 8px rgba(139, 92, 246, 0.3),
+            0 0 20px rgba(139, 92, 246, 0.1),
+            inset 0 0 8px rgba(139, 92, 246, 0.05);
+    }
+    50% {
+        border-color: rgba(34, 211, 238, 0.6);
+        box-shadow:
+            0 0 12px rgba(34, 211, 238, 0.4),
+            0 0 30px rgba(34, 211, 238, 0.15),
+            inset 0 0 12px rgba(34, 211, 238, 0.08);
+    }
+}
+
+/* 旋转流光边框 */
+.req-bar--loading::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 20px;
+    background: conic-gradient(
+        from var(--req-glow-angle, 0deg),
+        transparent 0%,
+        rgba(139, 92, 246, 0.4) 10%,
+        rgba(34, 211, 238, 0.5) 20%,
+        transparent 35%,
+        transparent 100%
+    );
+    z-index: -1;
+    animation: req-rotate-glow 3s linear infinite;
+    filter: blur(3px);
+}
+.req-bar--loading.req-bar--mini::before {
+    border-radius: 50%;
+}
+
+@keyframes req-rotate-glow {
+    0%   { transform: rotate(0deg);   }
+    100% { transform: rotate(360deg); }
+}
+
+@property --req-glow-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.req-bar--loading .req-bar__icon {
+    color: #a78bfa;
+    animation: req-spin 1.2s linear infinite;
+}
+
+@keyframes req-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ===== 状态：完成 ===== */
+.req-bar--done {
+    border-color: rgba(52, 211, 153, 0.5);
+    box-shadow:
+        0 0 8px rgba(52, 211, 153, 0.25),
+        0 0 20px rgba(52, 211, 153, 0.08),
+        inset 0 0 6px rgba(52, 211, 153, 0.04);
+}
+.req-bar--done .req-bar__icon { color: #34d399; }
+
+/* ===== 状态：已停止 ===== */
+.req-bar--stopped {
+    border-color: rgba(251, 146, 60, 0.5);
+    box-shadow: 0 0 8px rgba(251, 146, 60, 0.2);
+    animation: req-flash-orange 0.6s ease-out;
+}
+@keyframes req-flash-orange {
+    0%   { border-color: rgba(251, 146, 60, 0.8); box-shadow: 0 0 16px rgba(251, 146, 60, 0.4); }
+    100% { border-color: rgba(251, 146, 60, 0.3); box-shadow: 0 0 4px rgba(251, 146, 60, 0.1); }
+}
+.req-bar--stopped .req-bar__icon { color: #fb923c; }
+
+/* ===== 历史面板 ===== */
+.req-display-wrapper.req-display--open .req-bar {
+    border-radius: 18px 18px 4px 4px;
+    border-bottom-color: rgba(60, 60, 100, 0.15);
+}
+
+.req-history {
+    width: 480px;
+    min-width: 300px;
+    max-width: 600px;
+    background: rgba(18, 18, 36, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(100, 100, 140, 0.3);
+    border-top: 1px solid rgba(80, 80, 120, 0.15);
+    border-radius: 0 0 14px 14px;
+    margin-top: 0;
+    padding: 4px 0 6px;
+    font-family: 'Cascadia Code', 'Consolas', 'Microsoft YaHei', monospace;
+    font-size: 12px;
+    overflow: hidden;
+    display: none;
+    animation: req-slideDown 0.2s ease-out;
+}
+.req-display--open .req-history {
+    display: block;
+}
+
+@keyframes req-slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.req-history__item {
+    display: flex;
+    align-items: center;
+    padding: 5px 16px;
+    gap: 0;
+    color: #9ca3af;
+    transition: background 0.15s;
+}
+.req-history__item:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.req-history__idx {
+    color: #4b5563;
+    width: 28px;
+    flex-shrink: 0;
+    text-align: right;
+    margin-right: 10px;
+}
+.req-history__api {
+    color: #a78bfa;
+    flex-shrink: 0;
+}
+.req-history__model {
+    color: #7dd3fc;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+.req-history__spacer {
+    flex: 1;
+}
+.req-history__tokens {
+    color: #fbbf24;
+    flex-shrink: 0;
+    margin-right: 12px;
+    min-width: 70px;
+    text-align: right;
+}
+.req-history__time {
+    color: #34d399;
+    flex-shrink: 0;
+    min-width: 44px;
+    text-align: right;
+}
+.req-history__time--stopped {
+    color: #fb923c;
+}
+
+.req-history__empty {
+    text-align: center;
+    padding: 8px 16px;
+    color: #4b5563;
+    font-style: italic;
+}
+
+/* ===== 拖拽状态 ===== */
+.req-display-wrapper.req-display--dragging {
+    transition: none !important;
+}
+.req-display-wrapper.req-display--dragging .req-bar {
+    cursor: grabbing;
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+    .req-display-wrapper {
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .req-bar:not(.req-bar--mini) {
+        width: calc(100vw - 32px) !important;
+        max-width: none !important;
+        min-width: unset !important;
+    }
+
+    .req-bar.req-bar--mini {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        max-width: 44px !important;
+    }
+    .req-bar.req-bar--mini .req-bar__icon {
+        font-size: 19px;
+    }
+
+    .req-bar__toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .req-bar__text { font-size: 13px; }
+    .req-bar__sep { margin: 0 5px; }
+    .req-bar__summary { max-width: 100px; }
+
+    .req-history {
+        width: calc(100vw - 32px) !important;
+        max-width: none !important;
+        min-width: unset !important;
+        max-height: 40vh;
+        overflow-y: auto;
+    }
+
+    .req-history__item { padding: 6px 12px; font-size: 12px; }
+    .req-history__idx { width: 24px; margin-right: 6px; }
+    .req-history__tokens { margin-right: 8px; min-width: 60px; }
+}
+
+@media (max-width: 400px) {
+    .req-bar__summary { max-width: 70px; }
+    .req-bar__sep { margin: 0 3px; }
+    .req-bar__text { font-size: 12px; }
+    .req-bar__api { font-size: 12px; }
+    .req-bar__model { font-size: 11px; }
+    .req-bar__tokens { font-size: 11px; }
+    .req-bar__time { font-size: 11px; }
+}
