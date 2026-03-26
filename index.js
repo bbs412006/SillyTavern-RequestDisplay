@@ -39,10 +39,66 @@ let $wrapper, $bar, $icon, $text, $toggle, $history;
 // ===== 初始化 =====
 jQuery(async () => {
     loadSettings();
-    createUI();
+    await createUI();
     registerEventListeners();
+    await setupSettingsUI();
     console.log(`[${extensionName}] 插件已加载`);
 });
+
+// ===== 设置 UI 面板 =====
+async function setupSettingsUI() {
+    try {
+        const html = await $.get(`${extensionFolderPath}/settings.html`);
+        $('#extensions_settings').append(html);
+
+        const $enabledElem = $('#req_display_enabled');
+        const $miniElem = $('#req_display_mini');
+        const $resetBtn = $('#req_display_reset_pos');
+
+        // 恢复当前值
+        const settings = getSettings();
+        $enabledElem.prop('checked', settings.enabled);
+        $miniElem.prop('checked', settings.isMini);
+
+        // 监听开关
+        $enabledElem.on('change', () => {
+            const val = $enabledElem.prop('checked');
+            settings.enabled = val;
+            saveSettings();
+            if (val) {
+                $wrapper.show();
+            } else {
+                $wrapper.hide();
+            }
+        });
+
+        $miniElem.on('change', () => {
+            const val = $miniElem.prop('checked');
+            if (settings.isMini !== val) {
+                toggleMiniMode();
+            }
+        });
+
+        // 重置位置
+        $resetBtn.on('click', () => {
+            settings.position = { x: null, y: null };
+            saveSettings();
+            $wrapper.css({
+                left: '50%',
+                top: 'auto',
+                bottom: '20px',
+                transform: 'translateX(-50%)',
+            });
+            $bar.removeClass('req-bar--mini');
+            settings.isMini = false;
+            $miniElem.prop('checked', false);
+            toastr.success('悬浮条位置已重置为底部居中');
+        });
+
+    } catch (e) {
+        console.error(`[${extensionName}] Failed to load settings.html`, e);
+    }
+}
 
 // ===== 设置管理 =====
 function loadSettings() {
@@ -66,10 +122,8 @@ function saveSettings() {
     saveSettingsDebounced();
 }
 
-// ===== 创建 UI =====
 function createUI() {
     const settings = getSettings();
-    if (!settings.enabled) return;
 
     // Wrapper
     $wrapper = $('<div>', { class: 'req-display-wrapper', id: 'req-display-wrapper' });
@@ -93,6 +147,11 @@ function createUI() {
 
     $wrapper.append($bar, $history);
     $('body').append($wrapper);
+
+    // 如果未启用，则隐藏
+    if (!settings.enabled) {
+        $wrapper.hide();
+    }
 
     // 恢复位置
     if (settings.position.x !== null && settings.position.y !== null) {
