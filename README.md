@@ -19,7 +19,7 @@
 1. 打开 SillyTavern → ⚙️ 扩展 → 安装扩展
 2. 输入本仓库的 Git URL：
    ```
-   https://github.com/你的用户名/SillyTavern-RequestDisplay
+   https://github.com/bbs412006/SillyTavern-RequestDisplay
    ```
 3. 点击安装，刷新页面即可使用
 
@@ -27,7 +27,7 @@
 
 ```bash
 cd SillyTavern/public/scripts/extensions/third-party/
-git clone https://github.com/你的用户名/SillyTavern-RequestDisplay request-display
+git clone https://github.com/bbs412006/SillyTavern-RequestDisplay request-display
 ```
 
 重启 SillyTavern 即可。
