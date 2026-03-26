@@ -89,8 +89,8 @@ async function setupSettingsUI() {
                 left: '0',
                 right: '0',
                 margin: '0 auto',
-                top: 'auto',
-                bottom: '120px',
+                top: '60px',
+                bottom: 'auto',
                 transform: 'none',
             });
             $wrapper.show(); // 确保显示
