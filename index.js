@@ -3,10 +3,10 @@
  * 悬浮状态条：显示当前最新请求的 API 来源、内容摘要、token 数量及请求状态
  */
 
-import { eventSource, event_types } from '../../events.js';
-import { getGeneratingApi, getGeneratingModel, saveSettingsDebounced } from '../../../script.js';
-import { getContext } from '../../extensions.js';
-import { getTokenCountAsync } from '../../tokenizers.js';
+import { eventSource, event_types } from '../../../events.js';
+import { getGeneratingApi, getGeneratingModel, saveSettingsDebounced } from '../../../../script.js';
+import { getContext } from '../../../extensions.js';
+import { getTokenCountAsync } from '../../../tokenizers.js';
 
 const extensionName = 'request-display';
 const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`;
