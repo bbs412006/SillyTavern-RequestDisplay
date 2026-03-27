@@ -26,9 +26,9 @@
 .req-bar {
     position: relative;
     height: 36px;
-    min-width: 300px;
-    max-width: 600px;
-    width: 480px;
+    min-width: 200px;
+    max-width: 420px;
+    width: 360px;
     border-radius: 18px;
     background: rgba(35, 35, 55, 0.95);
     backdrop-filter: blur(12px);
@@ -56,26 +56,14 @@
 
 /* ===== 极简模式 ===== */
 .req-bar.req-bar--mini {
-    width: 38px !important;
-    height: 38px !important;
-    min-width: 38px !important;
-    max-width: 38px !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
     border-radius: 50%;
     padding: 0;
     justify-content: center;
     align-items: center;
-}
-.req-bar.req-bar--mini .req-bar__icon {
-    margin: 0;
-    margin-right: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    font-weight: 800;
-    -webkit-text-stroke: 0.8px currentColor;
 }
 .req-bar.req-bar--mini .req-bar__content,
 .req-bar.req-bar--mini .req-bar__toggle {
@@ -103,18 +91,7 @@
 }
 .req-bar__content::-webkit-scrollbar { display: none; }
 
-.req-bar__icon {
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    font-size: 15px;
-    font-weight: 700;
-    -webkit-text-stroke: 0.5px currentColor;
-}
+/* 图标已移除，通过边框颜色区分状态 */
 
 .req-bar__text {
     display: flex;
@@ -185,7 +162,7 @@
     border-color: rgba(100, 100, 140, 0.4);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
-.req-bar--idle .req-bar__icon { color: #818cf8; }
+
 
 /* ===== 状态：请求中（呼吸流光） ===== */
 .req-bar--loading {
@@ -243,15 +220,7 @@
     inherits: false;
 }
 
-.req-bar--loading .req-bar__icon {
-    color: #a78bfa;
-    animation: req-spin 1.2s linear infinite;
-}
 
-@keyframes req-spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
 
 /* ===== 状态：完成 ===== */
 .req-bar--done {
@@ -261,7 +230,7 @@
         0 0 20px rgba(52, 211, 153, 0.08),
         inset 0 0 6px rgba(52, 211, 153, 0.04);
 }
-.req-bar--done .req-bar__icon { color: #34d399; }
+
 
 /* ===== 状态：已停止 ===== */
 .req-bar--stopped {
@@ -273,7 +242,7 @@
     0%   { border-color: rgba(251, 146, 60, 0.8); box-shadow: 0 0 16px rgba(251, 146, 60, 0.4); }
     100% { border-color: rgba(251, 146, 60, 0.3); box-shadow: 0 0 4px rgba(251, 146, 60, 0.1); }
 }
-.req-bar--stopped .req-bar__icon { color: #fb923c; }
+
 
 /* ===== 历史面板 ===== */
 .req-display-wrapper.req-display--open .req-bar {
@@ -282,9 +251,9 @@
 }
 
 .req-history {
-    width: 480px;
-    min-width: 300px;
-    max-width: 600px;
+    width: 360px;
+    min-width: 200px;
+    max-width: 420px;
     background: rgba(30, 30, 45, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -380,13 +349,10 @@
     }
 
     .req-bar.req-bar--mini {
-        width: 44px !important;
-        height: 44px !important;
-        min-width: 44px !important;
-        max-width: 44px !important;
-    }
-    .req-bar.req-bar--mini .req-bar__icon {
-        font-size: 19px;
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
+        max-width: 20px !important;
     }
 
     .req-bar__toggle {

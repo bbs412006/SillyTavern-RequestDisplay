@@ -114,7 +114,7 @@ const monitor = {
     }
 };
 
-let $wrapper, $bar, $icon, $text, $toggle, $history;
+let $wrapper, $bar, $text, $toggle, $history;
 
 // ===== 初始化 =====
 jQuery(async () => {
@@ -300,13 +300,12 @@ function createUI() {
     $bar = $('<div>', { class: 'req-bar req-bar--idle' });
     if (settings.isMini) $bar.addClass('req-bar--mini');
 
-    $icon = $('<div>', { class: 'req-bar__icon', text: '─' });
     const $content = $('<div>', { class: 'req-bar__content' });
     $text = $('<div>', { class: 'req-bar__text' }).html('<span style="color:#6b7280">等待请求...</span>');
     $toggle = $('<div>', { class: 'req-bar__toggle', text: '▼' });
 
     $content.append($text);
-    $bar.append($icon, $content, $toggle);
+    $bar.append($content, $toggle);
 
     $history = $('<div>', { class: 'req-history' }).html(
         '<div class="req-history__empty">暂无历史记录</div>'
@@ -380,7 +379,6 @@ function toggleHistoryPanel() {
 function renderIdleState() {
     if (!$bar) return;
     $bar.removeClass('req-bar--loading req-bar--done req-bar--stopped').addClass('req-bar--idle');
-    $icon.text('─');
     $text.html('<span style="color:#6b7280">等待请求...</span>');
 }
 
@@ -395,9 +393,6 @@ function updateBarUI(req) {
 
     $bar.removeClass('req-bar--idle req-bar--loading req-bar--done req-bar--stopped')
         .addClass(statusClass);
-
-    const icons = { loading: '⟳', done: '✓', stopped: '⏹' };
-    $icon.text(icons[req.status] || '─');
 
     const summaryText = req.summary
         ? `<span class="req-bar__summary">${escHtml(req.summary)}${req.summary.length > 20 ? '...' : ''}</span><span class="req-bar__sep">│</span>`
