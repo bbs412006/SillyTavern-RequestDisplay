@@ -91,8 +91,31 @@
 }
 .req-bar__content::-webkit-scrollbar { display: none; }
 
-/* 图标已移除，通过边框颜色区分状态 */
+/* ===== 心电图 ECG ===== */
+.req-bar__ecg {
+    width: 30px;
+    height: 14px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    overflow: visible;
+}
+.req-bar__ecg polyline {
+    fill: none;
+    stroke: #34d399;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    transition: stroke 0.4s ease;
+}
+.req-bar__ecg--good polyline { stroke: #34d399; }
+.req-bar__ecg--fair polyline { stroke: #fbbf24; }
+.req-bar__ecg--poor polyline { stroke: #f87171; }
 
+.req-bar.req-bar--mini .req-bar__ecg {
+    display: none;
+}
+
+/* ===== 文字区 ===== */
 .req-bar__text {
     display: flex;
     align-items: center;
@@ -140,15 +163,16 @@
 /* ===== 展开/收起按钮 ===== */
 .req-bar__toggle {
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 8px;
+    margin-left: 2px;
+    margin-right: -6px;
     cursor: pointer;
     color: #6b7280;
-    border-radius: 50%;
+    border-radius: 6px;
     transition: color 0.2s, background 0.2s, opacity 0.3s ease;
     font-size: 11px;
 }

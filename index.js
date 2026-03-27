@@ -26,6 +26,11 @@ const monitor = {
     timer: null,
     historyOpen: false,
 
+    // ECG 状态
+    ecgValues: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+    healthState: 1, // 1: Good, 2: Fair, 3: Poor
+    ecgTimer: null,
+
     addRequest(req) {
         req.id = req.id || (Date.now() + Math.random().toString(36).substr(2, 9));
         req.startTime = Date.now();
@@ -44,6 +49,17 @@ const monitor = {
         req.elapsed = ((req.endTime - req.startTime) / 1000).toFixed(1);
 
         this.addHistory(req);
+
+        // 评估健康状态 (ECG)
+        if (status === 'stopped' || status === 'error') {
+            this.healthState = 3;
+        } else if (parseFloat(req.elapsed) > 2.5) {
+            this.healthState = 2; // Warning: API latency increased
+        } else if (parseFloat(req.elapsed) < 1.0) {
+            this.healthState = 1; // Great: low latency fast response
+        }
+
+        this.updateEcgColor();
 
         if (this.currentVisibleId === id) {
             updateBarUI(req);
@@ -111,6 +127,41 @@ const monitor = {
             this.history = this.history.slice(0, settings.maxHistory);
         }
         renderHistory();
+    },
+
+    updateEcg() {
+        if (!getSettings()?.enabled || getSettings()?.isMini) return;
+        
+        let nextVal = 5;
+        if (this.healthState === 1) {
+            nextVal = 3 + Math.random() * 2;
+            if (Math.random() < 0.08) nextVal = 9; // 偶尔脉搏跳动
+        } else if (this.healthState === 2) {
+            nextVal = 4 + Math.random() * 6; // 中等杂波
+        } else {
+            nextVal = 1 + Math.random() * 12; // 剧烈报错红色波纹
+        }
+
+        this.ecgValues.shift();
+        this.ecgValues.push(nextVal);
+
+        const points = this.ecgValues.map((v, i) => `${i * 3},${14 - v}`).join(' ');
+        $('.req-bar__ecg polyline').attr('points', points);
+        
+        // 自动恢复 (如果系统长期闲置，健康度慢慢回血)
+        if (this.healthState > 1 && this.active.size === 0 && Math.random() < 0.03) {
+            this.healthState--;
+            this.updateEcgColor();
+        }
+    },
+
+    updateEcgColor() {
+        const $ecg = $('.req-bar__ecg');
+        if (!$ecg.length) return;
+        $ecg.removeClass('req-bar__ecg--good req-bar__ecg--fair req-bar__ecg--poor');
+        if (this.healthState === 1) $ecg.addClass('req-bar__ecg--good');
+        else if (this.healthState === 2) $ecg.addClass('req-bar__ecg--fair');
+        else $ecg.addClass('req-bar__ecg--poor');
     }
 };
 
@@ -123,6 +174,10 @@ jQuery(async () => {
     registerEventListeners();
     installGlobalInterceptors();
     await setupSettingsUI();
+    
+    // 启动心电图动画轮询
+    monitor.ecgTimer = setInterval(() => monitor.updateEcg(), 120);
+
     toastr.info(`[Request Display] 插件已就绪`, null, { timeOut: 3000 });
     console.log(`[${extensionName}] 全局拦截器启动`);
 });
@@ -301,10 +356,16 @@ function createUI() {
     if (settings.isMini) $bar.addClass('req-bar--mini');
 
     const $content = $('<div>', { class: 'req-bar__content' });
-    $text = $('<div>', { class: 'req-bar__text' }).html('<span style="color:#6b7280">等待请求...</span>');
+    $content.html(`
+        <svg class="req-bar__ecg req-bar__ecg--good" viewBox="0 0 30 14" preserveAspectRatio="none">
+            <polyline points="0,6 3,6 6,6 9,6 12,6 15,6 18,6 21,6 24,6 27,6"></polyline>
+        </svg>
+        <div class="req-bar__text"><span style="color:#6b7280">等待请求...</span></div>
+    `);
+    
+    $text = $content.find('.req-bar__text');
     $toggle = $('<div>', { class: 'req-bar__toggle', text: '▼' });
 
-    $content.append($text);
     $bar.append($content, $toggle);
 
     $history = $('<div>', { class: 'req-history' }).html(
@@ -336,6 +397,14 @@ function createUI() {
         if ($(e.target).closest('.req-bar__toggle, .req-history').length) return;
         $bar.toggleClass('req-bar--mini');
         settings.isMini = $bar.hasClass('req-bar--mini');
+        
+        // Fix BUG: Close open history panel if switching to mini mode manually
+        if (settings.isMini && monitor.historyOpen) {
+            monitor.historyOpen = false;
+            $wrapper.removeClass('req-display--open');
+            $toggle.text('▼');
+        }
+
         saveSettings();
         const $miniElem = $('#req_display_mini');
         if ($miniElem.length) $miniElem.prop('checked', settings.isMini);
