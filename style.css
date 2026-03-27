@@ -56,10 +56,10 @@
 
 /* ===== 极简模式 ===== */
 .req-bar.req-bar--mini {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    max-width: 16px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    max-width: 30px !important;
     border-radius: 50%;
     padding: 0;
     justify-content: center;
@@ -244,6 +244,25 @@
 }
 
 
+/* ===== 极简模式高饱和背景 ===== */
+.req-bar.req-bar--mini.req-bar--idle {
+    background: rgba(100, 116, 139, 0.95);
+    border-color: rgba(148, 163, 184, 0.8);
+}
+.req-bar.req-bar--mini.req-bar--loading {
+    background: rgba(139, 92, 246, 0.95);
+    box-shadow: 0 0 18px rgba(139, 92, 246, 0.7);
+}
+.req-bar.req-bar--mini.req-bar--done {
+    background: rgba(52, 211, 153, 0.95);
+    box-shadow: 0 0 18px rgba(52, 211, 153, 0.7);
+}
+.req-bar.req-bar--mini.req-bar--stopped {
+    background: rgba(251, 146, 60, 0.95);
+    box-shadow: 0 0 18px rgba(251, 146, 60, 0.7);
+}
+
+
 /* ===== 历史面板 ===== */
 .req-display-wrapper.req-display--open .req-bar {
     border-radius: 18px 18px 4px 4px;
@@ -349,10 +368,10 @@
     }
 
     .req-bar.req-bar--mini {
-        width: 20px !important;
-        height: 20px !important;
-        min-width: 20px !important;
-        max-width: 20px !important;
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        max-width: 32px !important;
     }
 
     .req-bar__toggle {
